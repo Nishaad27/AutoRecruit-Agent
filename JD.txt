@@ -1,0 +1,20 @@
+**Job Description: Data Scientist**  
+
+**Location:** Remote / Hybrid / Onsite  
+**Employment Type:** Full-Time  
+
+**About the Role:**  
+We are seeking a Data Scientist with expertise in machine learning, data analytics, and AI-driven decision-making. The ideal candidate will develop predictive models, build data pipelines, and apply NLP techniques to extract insights and optimize business outcomes.  
+
+**Key Responsibilities:**  
+- Develop predictive models to enhance business decision-making.  
+- Apply NLP techniques for text analysis and insights.  
+- Build and maintain data pipelines for efficient data processing.  
+- Utilize Python, SQL, R, TensorFlow, and Scikit-Learn for model development.  
+- Create reports and visualizations using Tableau, Pandas, and NumPy.  
+
+**Qualifications:**  
+- 4+ years of experience in machine learning and analytics.  
+- M.Sc. in Data Science, Computer Science, or a related field.  
+- Strong programming skills in Python, R, and SQL.  
+- Experience with recommendation systems and fraud detection models.  
