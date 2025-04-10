@@ -6,24 +6,19 @@ from agents import tool_db
 # Task 1: Extract Resume Text
 
 
-
 match_task = Task(
     description=(
-        "For each applicant listed in 'applicant_resumes.csv':\n"
-        "1. Extract and parse their resume to identify:\n"
-        "   - Key skills\n"
-        "   - Relevant work experience\n"
-        "   - Educational background\n"
-        "   - Industry/domain-specific terminology\n"
-        "2. Compare each of these components against the provided job description (JD) using semantic and contextual analysis.\n"
-        "3. Compute a relevance score (0–100) by applying the following weights:\n"
+        "For each applicant in 'applicant_resumes.csv':\n"
+        "1. Read and extract resume content (skills, experience, education, and domain keywords).\n"
+        "2. Compare this information with the provided job description (JD).\n"
+        "3. Compute a match percentage (0–100) based on the following weights:\n"
         "   - Skills: 40%\n"
         "   - Experience: 30%\n"
         "   - Education: 15%\n"
         "   - Domain alignment: 15%\n"
-        "4. Output a JSON-style list where each entry includes:\n"
-        "   - name: Full name of the applicant\n"
-        "   - match_percentage: Integer from 0 to 100 reflecting the overall alignment with the JD"
+        "4. Output a JSON-style list where each dictionary contains:\n"
+        "- name: Full name of the applicant\n"
+        "- match_percentage: Integer between 0 and 100"
     ),
     expected_output=(
         "A list of dictionaries with this structure only:\n"

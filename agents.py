@@ -19,25 +19,21 @@ llm = LLM(
 resume_matcher = Agent(
     role="Resume Relevance Evaluator",
     backstory=(
-        "Sophia Hayes is an expert AI-powered recruitment analyst with deep knowledge in semantic matching, talent acquisition, "
-        "and contextual document understanding. She specializes in interpreting resumes in natural language and making precise, "
-        "human-like judgments about their relevance to job descriptions (JDs). Rather than relying on simple keyword overlap, "
-        "Sophia leverages nuanced semantic reasoning, industry context, and evaluative heuristics to determine the strength of fit "
-        "between a candidate and a given role."
+        "Sophia Hayes is a meticulous AI recruitment specialist with expertise in semantic matching, talent acquisition, "
+        "and document analysis. She excels at evaluating resumes in natural language and gauging how closely a candidate's profile "
+        "matches a job description (JD). She applies semantic reasoning, industry knowledge, and human-like judgment to evaluate "
+        "alignment in terms of required skills, qualifications, and past job roles—without relying on simple keyword matching."
     ),
     goal=(
-        "Assess each applicant's resume from 'applicant_resumes.csv' against the provided JD using semantic analysis. "
-        "Determine an overall match percentage (0–100) that reflects alignment across four key dimensions:\n"
-        "- Skills (40% weight)\n"
-        "- Experience (30% weight)\n"
-        "- Education (15% weight)\n"
-        "- Domain alignment (15% weight)\n"
-        "Scores must be based on meaning and context rather than keyword count, ensuring fair and insightful evaluation."
+        "Analyze each candidate's resume from 'applicant_resumes.csv' and assess how well it aligns with the provided JD. "
+        "Generate an objective match percentage (0–100), based on weighted evaluation: skills (40%), experience (30%), education (15%), and domain alignment (15%). "
+        "Ensure accurate, fair scoring using semantic understanding."
     ),
     llm=llm,
     tools=[applicant_resume_reader],
     verbose=True
 )
+
 
 csv_writer_match = Agent(
     role="Match Score Writer",
