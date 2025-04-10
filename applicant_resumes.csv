@@ -1,4 +1,30 @@
 Name,Resume Content
+Robert Wilson,"Name: Robert Wilson  
+Email: robert.wilson@email.com  
+Phone: +1 777 -888-9999  
+ 
+Objective:  
+Mechanical Engineer with 7+ years of experience in CAD design, thermodynamics, and product 
+development.  
+Seeking to contribute technical expertise to innovative engineering solutions.  
+ 
+Work Experience:  
+- Mechanical Engineer, ABC Manufacturing (2016 -Present)  
+  - Designed mechanical components using AutoCAD and SolidWorks.  
+  - Conducted thermal analysis to optim ize energy efficiency.  
+  - Collaborated with cross -functional teams to develop new products.  
+ 
+Education:  
+- B.Tech in Mechanical Engineering, DEF Institute (2012 -2016)  
+ 
+Skills:  
+- CAD Design, SolidWorks, AutoCAD  
+- Thermodynamics, Structural Analysis  
+- Manufa cturing Processes, 3D Printing  
+ 
+Projects:  
+- Designed a high -efficiency heat exchanger.  
+- Developed an automated assembly line for industrial manufacturing ."
 Nishaad Mishra,"Nishaad Mishra
 Email: nishaad.may.27@gmail.com
 Phone: +1 987-654-3210
@@ -25,6 +51,36 @@ Projects
 precision.
 Customer Churn Prediction  – Used LightGBM and improved recall by 22%.
 Text Summarizer Tool  – Built extractive + abstractive hybrid summarizer."
+Ritam Bhattacharya,"Ritam Bhattacharya
+Email: ritam117bhattacharya@gmail.com
+Phone: +1 987-654-3210
+Objective
+Innovative Data Scientist focusing on real-time data applications and streaming analytics. 
+Experienced with big data ecosystems and end-to-end ML workflows.
+Work Experience
+Senior Data Scientist, Nebula AI  (2021–Present)
+Architected ML pipeline using Spark MLlib for user behavior prediction.
+Led project integrating ML into a real-time recommendation system.
+Mentored junior data scientists in model lifecycle management.
+Data Engineer Intern, Infoscope Pvt Ltd  (2019–2020)
+Built data lakes on AWS and created Spark-based ETL workflows.
+Education
+M.Tech in Data Engineering – IIT Hyderabad (2017–2019)
+Skills
+Languages: Python, Scala, SQL
+Big Data: Spark, Hadoop, Airflow
+Cloud Platforms: AWS (EMR, S3, Lambda), Azure
+ML Frameworks:  MLlib, Scikit-Learn
+Projects
+Real-Time Recommender  – Spark Streaming + Kafka based recommender for news 
+articles.
+Predictive Maintenance  – Developed system for anomaly detection in 
+manufacturing lines.
+CI/CD for ML – Built pipelines using MLflow and GitHub Actions.
+
+Awards and Recognition
+Dean’s List, IIT Hyderabad (2018)
+Google Cloud Certified – Professional Data Engineer (2022)"
 Mayurakshi Pani,"Mayurakshi Pani
 Email: mayurakshipani84@gmail.com
 Phone: +1 987-654-3210
@@ -52,8 +108,36 @@ Projects
 Medical Image Segmentation  – Developed UNet-based tool for organ segmentation.
 Bias Detection in Medical AI  – Created fairness audit framework for clinical 
 models."
-,"High -Level Data Flow in the Recruitment Automation System  
- 
+Rounak Chakraborty,"Rounak Chakraborty
+Email: rounak242003@gmail.com
+Phone: +1 987-654-3210
+Objective
+Versatile Data Scientist with 4+ years of experience in machine learning, statistical modeling,
+and data engineering. Passionate about extracting insights from complex data and deploying 
+ML models in production environments.
+Work Experience
+Data Scientist, Quantum Analytics Inc.  (2021–Present)
+Led development of a real-time demand forecasting system using LSTM models.
+Designed and deployed ML models using AWS SageMaker and Docker.
+Built data ingestion pipelines using Apache Kafka and Spark.
+Jr. Data Scientist, IntelliData Tech  (2019–2021)
+Assisted in building fraud detection algorithms using ensemble methods.
+Automated reporting dashboards using Power BI and SQL Server.
+Education
+M.Sc. in Data Science – University of Edinburgh (2017–2019)
+Skills
+Languages: Python, R, SQL, Scala
+ML/DS Tools: TensorFlow, PyTorch, XGBoost
+Big Data: Apache Spark, Hive, Kafka
+Visualization: Power BI, Seaborn, Plotly
+Projects
+LSTM Forecasting for Retail  – Improved inventory planning accuracy by 30%.
+Deep Learning OCR Engine  – Converted scanned docs to searchable text with 
+>95% accuracy.
+Cloud-native ML Deployment  – Created RESTful API with Flask and deployed via 
+Kubernetes."
+Not Found,"High -Level Data Flow in the Recruitment Automation System  
+
 Overall Process  
 The recruitment system processes data through four major stages, with information 
 becoming more refined at each step:  
@@ -94,55 +178,55 @@ Key Data Transformations
 This flow ensures that raw resume data is systematically processed, evaluated, filtered, and 
 leveraged to connect with the most qualified candidates, with each component adding value 
 to the information before passing it to the next stage."
-Mark Johnson,"Name: Mark Johnson  
-Email: mark.johnson@email.com  
-Phone: +1 555 -678-1234  
- 
-Objective:  
-Marketing Manager with 6 years of experience in digital marketing strategies, SEO, and brand 
-management.  
-Seeking to drive business growth through data -driven campaigns and audience engagement.  
- 
-Work Experience:  
-- Marketing Manager, ABC Corp (2019 -Present)  
-  - Led a team to implement SEO strategies, improving organic traffi c by 40%.  
-  - Managed social media campaigns with a 25% increase in customer engagement.  
-  - Developed email marketing funnels, increasing conversion rates.  
- 
-Education:  
-- MBA in Marketing, DEF Business School (2015 -2017)  
- 
-Skills:  
-- Digital Marketing, SEO , Google Analytics  
-- Content Strategy, Social Media Management  
-- Email Marketing, PPC Advertising  
- 
-Projects:  
-- Launched a successful influencer marketing campaign.  
+Mark Johnson,"Name: Mark Johnson
+Email: mark.johnson@email.com
+Phone: +1 555 -678-1234
+
+Objective:
+Marketing Manager with 6 years of experience in digital marketing strategies, SEO, and brand
+management.
+Seeking to drive business growth through data -driven campaigns and audience engagement.
+
+Work Experience:
+- Marketing Manager, ABC Corp (2019 -Present)
+  - Led a team to implement SEO strategies, improving organic traffi c by 40%.
+  - Managed social media campaigns with a 25% increase in customer engagement.
+  - Developed email marketing funnels, increasing conversion rates.
+
+Education:
+- MBA in Marketing, DEF Business School (2015 -2017)
+
+Skills:
+- Digital Marketing, SEO , Google Analytics
+- Content Strategy, Social Media Management
+- Email Marketing, PPC Advertising
+
+Projects:
+- Launched a successful influencer marketing campaign.
 - Designed and executed an e -commerce advertising strategy."
 Sarah Lee,"Name: Sarah Lee  
 Email: sarah.lee@email.com  
 Phone: +1 222 -333-4444  
- 
+
 Objective:  
 HR Specialist with 5 years of experience in talent acquisition, employee engagement, and HR 
 analytics.  
 Passionate about building inclusive workplaces and improving HR processes.  
- 
+
 Work Experience:  
 - HR Specialist, XYZ HR Solutions (2018 -Present)  
   - Managed recruitment strategies, reducing hiring time by 30%.  
   - Developed employee engagement programs, increasing retention by 15%.  
   - Conducted workforce analytics to optimize HR policies.  
- 
+
 Education:  
 - BBA in Human Resource Management, ABC University (2014 -2018)  
- 
+
 Skills:  
 - Recruitment, Talent Acquisition, HR Analytics  
 - Employee Relations, Training & Development  
 - HR Software: Workday, BambooHR  
- 
+
 Projects:  
 - Implemented an AI -powered resume screening system.  
 - Designed onboarding programs for remote employees."
@@ -225,10 +309,4 @@ Projects
 Deep Learning OCR Engine  – Converted scanned docs to searchable text with 
 >95% accuracy.
 Cloud-native ML Deployment  – Created RESTful API with Flask and deployed via 
-Kubernetes.
-
-Awards and Recognition
-Dean’s List, University of Edinburgh (2017, 2018)
-Extracurricular activities
-ACM International Collegiate Programming Contest
-Volunteer Tutor at Edinburgh College"
+Kubernetes."
