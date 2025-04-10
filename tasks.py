@@ -9,16 +9,24 @@ from agents import tool_db
 
 match_task = Task(
     description=(
-        "For each applicant in 'applicant_resumes.csv', read their resume content and compare it with the given job description (JD). "
-        "Determine how well the resume aligns with the JD based on key factors such as required skills, relevant experience, job titles, "
-        "education, and industry-specific terminology. "
-        "Use a reasoning-based approach to compute a match percentage (0-100) that quantifies this alignment."
+        "For each applicant listed in 'applicant_resumes.csv':\n"
+        "1. Extract and parse their resume to identify:\n"
+        "   - Key skills\n"
+        "   - Relevant work experience\n"
+        "   - Educational background\n"
+        "   - Industry/domain-specific terminology\n"
+        "2. Compare each of these components against the provided job description (JD) using semantic and contextual analysis.\n"
+        "3. Compute a relevance score (0–100) by applying the following weights:\n"
+        "   - Skills: 40%\n"
+        "   - Experience: 30%\n"
+        "   - Education: 15%\n"
+        "   - Domain alignment: 15%\n"
+        "4. Output a JSON-style list where each entry includes:\n"
+        "   - name: Full name of the applicant\n"
+        "   - match_percentage: Integer from 0 to 100 reflecting the overall alignment with the JD"
     ),
     expected_output=(
-        "A JSON-style list of dictionaries. Each dictionary must include:\n"
-        "- name: Full name of the applicant\n"
-        "- match_percentage: An integer from 0 to 100 representing the estimated match with the JD\n\n"
-        "Example output:\n"
+        "A list of dictionaries with this structure only:\n"
         "[\n"
         "    {\"name\": \"John Doe\", \"match_percentage\": 86},\n"
         "    {\"name\": \"Jane Smith\", \"match_percentage\": 74}\n"
