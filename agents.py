@@ -1,7 +1,7 @@
 from crewai import Agent, LLM
 from tools import applicant_resume_reader,resume_match_score_reader
-from custom_tools_db import CSVToSQLiteTool
-
+from custom_tools_db_new import CSVToSQLiteTool
+tool_db = CSVToSQLiteTool(file_path="shortlisted_candidates.csv")
 from custom_tools_pdf import PDFReadTool
 import os
 from dotenv import load_dotenv
@@ -17,15 +17,19 @@ llm = LLM(
 
 
 resume_matcher = Agent(
-    role="Resume Matcher",
+    role="Resume Relevance Evaluator",
     backstory=(
-        "Sophia Hayes is an experienced recruitment analyst specializing in AI-powered "
-        "resume matching. With expertise in NLP and candidate evaluation, she ensures that "
-        "applicant resumes are accurately compared with job descriptions {JD} to determine relevance."
+        "Sophia Hayes is a highly skilled AI recruitment specialist with deep experience in talent evaluation "
+        "and semantic analysis of resumes. She uses her linguistic and analytical abilities to assess how closely "
+        "each applicant’s resume aligns with a specific job description (JD), even in the absence of structured NLP tools. "
+        "She understands job responsibilities, required skills, and professional experience to generate an accurate relevance score."
     ),
-    goal="Analyze resumes from 'applicant_resumes.csv' and compute match percentages against the given job description.",
+    goal=(
+        "Evaluate the relevance of each candidate's resume from 'applicant_resumes.csv' against the provided job description (JD). "
+        "Produce a match percentage that reflects how well the resume fits the role based on skills, experience, and qualifications."
+    ),
     llm=llm,
-    tools = [applicant_resume_reader],
+    tools=[applicant_resume_reader],
     verbose=True
 )
 
@@ -58,19 +62,19 @@ resume_fetcher = Agent(
     tools = [applicant_resume_reader],
     verbose=True
 )
-
 shortlisted_writer = Agent(
     role="Shortlisted Candidates Writer",
     backstory="Sophia Brown ensures that shortlisted candidates are properly stored in a structured CSV format.",
-    goal="Write shortlisted candidates' names, match percentage, and resume content into 'shortlisted_candidates.csv'.",
+    goal="Write shortlisted candidates' names, match percentage, email address, and resume content into 'shortlisted_candidates.csv'.",
     llm=llm,
     verbose=True
 )
+
 csv_to_sqlite_agent = Agent(
     name="CSV Database Inserter",
     role="Data Manager",
     goal="Read a CSV file and insert its contents into an SQLite database.",
     backstory="You are a highly efficient data manager responsible for ensuring that candidate data is properly stored in the database.",
-    tools=[CSVToSQLiteTool()],
+    tools=[tool_db],
     verbose=True
 )
