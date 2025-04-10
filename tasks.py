@@ -1,6 +1,7 @@
 from crewai import Task
 from agents import resume_matcher,csv_writer_match,resume_fetcher,shortlisted_writer,match_score_reader,csv_to_sqlite_agent
 from custom_tools_db import CSVToSQLiteTool
+from agents import tool_db
 
 # Task 1: Extract Resume Text
 
@@ -8,15 +9,19 @@ from custom_tools_db import CSVToSQLiteTool
 
 match_task = Task(
     description=(
-        "Read 'applicant_resumes.csv' and compare each applicant's resume content with the given job description {JD}. "
-        "Use NLP techniques to determine how well each resume matches the JD {JD}, and calculate a match percentage."
+        "For each applicant in 'applicant_resumes.csv', read their resume content and compare it with the given job description (JD). "
+        "Determine how well the resume aligns with the JD based on key factors such as required skills, relevant experience, job titles, "
+        "education, and industry-specific terminology. "
+        "Use a reasoning-based approach to compute a match percentage (0-100) that quantifies this alignment."
     ),
     expected_output=(
-        "A list of dictionaries where each entry contains the applicant's name and their match percentage.\n"
-        "Example:\n"
+        "A JSON-style list of dictionaries. Each dictionary must include:\n"
+        "- name: Full name of the applicant\n"
+        "- match_percentage: An integer from 0 to 100 representing the estimated match with the JD\n\n"
+        "Example output:\n"
         "[\n"
-        "    {'name': 'John Doe', 'match_percentage': 85},\n"
-        "    {'name': 'Jane Smith', 'match_percentage': 72}\n"
+        "    {\"name\": \"John Doe\", \"match_percentage\": 86},\n"
+        "    {\"name\": \"Jane Smith\", \"match_percentage\": 74}\n"
         "]"
     ),
     agent=resume_matcher
@@ -86,31 +91,35 @@ fetch_resume_task = Task(
 save_shortlisted_task = Task(
     description=(
         "Save shortlisted candidates into a CSV file named 'shortlisted_candidates.csv'.\n"
-        "The file should contain three columns: Candidate Name, Match Percentage (Numeric), and Full Resume Content.\n"
+        "The file should contain the following four columns: NAME, MATCH_PERCENTAGE (Numeric), EMAIL_ADDRESS, and RESUME_CONTENT.\n"
         "Ensure that:\n"
-        "  - Match Percentage values are stored as numbers (not strings or objects).\n"
-        "  - Resume content is stored exactly as extracted, without additional formatting.\n"
-        "  - The file structure remains consistent and does not contain unnecessary metadata."
+        "  - MATCH_PERCENTAGE values are stored as numbers (not strings or percentage symbols).\n"
+        "  - EMAIL_ADDRESS is accurately extracted using regex and matched correctly.\n"
+        "  - RESUME_CONTENT is stored exactly as extracted, without any additional formatting or cleanup.\n"
+        "  - Missing fields (if any) are stored as empty strings.\n"
+        "  - The file structure remains consistent and does not contain any extra metadata or columns."
     ),
     expected_output=(
-        "A CSV file named 'shortlisted_candidates.csv' with structured data.\n"
-        "Example Structure:\n"
-        "| NAME          | MATCH_PERCENTAGE | RESUME_CONTENT                           |\n"
-        "|--------------|----------------|------------------------------------------|\n"
-        "| John Doe     | 85              | Experienced ML Engineer with expertise... |\n"
-        "\nFile Path: 'shortlisted_candidates.csv'\n"
-        "Ensure that numeric values remain in pure number format."
-        "Do NOT include Markdown code block markers like ```csv and ```. "
-        "Stricly maintain 3 columns NAME, MATCH_PERCENTAGE and RESUME_CONTENT"
+        "A CSV file named 'shortlisted_candidates.csv' with the following structure:\n"
+        "| NAME       | MATCH_PERCENTAGE | EMAIL_ADDRESS     | RESUME_CONTENT                         |\n"
+        "|------------|------------------|-------------------|----------------------------------------|\n"
+        "| John Doe   | 85               | john@example.com  | Experienced ML Engineer with expertise... |\n"
+        "\n"
+        "File Path: 'shortlisted_candidates.csv'\n"
+        "Ensure that numeric values remain in pure number format.\n"
+        "Do NOT include Markdown code block markers like ```csv and ```.\n"
+        "Strictly maintain these four columns in the CSV: NAME, MATCH_PERCENTAGE, EMAIL_ADDRESS, and RESUME_CONTENT."
     ),
     agent=shortlisted_writer,
     context=[fetch_resume_task],
     output_file="shortlisted_candidates.csv"
 )
+
+
 db_insertion_task = Task(
     description="Read the CSV file named 'shortlisted_candidates.csv', clean the data, and insert it into the SHORTLISTED_CANDIDATES table in SQLite. Ensure that only valid rows are inserted, and data integrity is maintained.",
     expected_output="The database should contain all valid rows from the CSV file without any empty or invalid data.",
     agent=csv_to_sqlite_agent,
-    tools=[CSVToSQLiteTool()],
+    tools=[tool_db],
     parameters={"csv_file": "shortlisted_candidates.csv", "db_name": "shortlisted_candidates.db"}
 )

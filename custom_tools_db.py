@@ -28,10 +28,10 @@ class CSVToSQLiteTool(BaseTool):
 
         # Remove ```csv and ``` markers
         cleaned_lines = [re.sub(r"^```csv\n|```$", "", line.strip()) for line in lines if line.strip()]
-        
+
         # Create a temporary file to store cleaned CSV
         temp_file = tempfile.NamedTemporaryFile(delete=False, mode="w", newline="", encoding="utf-8")
-        
+
         csv_reader = csv.reader(cleaned_lines)
         csv_writer = csv.writer(temp_file)
 
@@ -56,18 +56,26 @@ class CSVToSQLiteTool(BaseTool):
             # Read cleaned CSV into a DataFrame
             df = pd.read_csv(cleaned_csv)
 
-            # Keep only the required columns
-            required_columns = ["NAME", "MATCH_PERCENTAGE", "RESUME_CONTENT"]
+            # Expected columns
+            required_columns = [
+                "NAME",
+                "MATCH_PERCENTAGE",
+                "PHONE_NUMBER",
+                "EMAIL_ADDRESS",
+                "SKILLS",
+                "EXPERIENCE",
+                "RESUME_CONTENT"
+            ]
             df = df[required_columns]
 
-            # Drop rows with any missing values
-            df = df.dropna()
+            # Drop rows with any missing MATCH_PERCENTAGE or NAME
+            df = df.dropna(subset=["NAME", "MATCH_PERCENTAGE"])
 
             # Ensure MATCH_PERCENTAGE is numeric
             df["MATCH_PERCENTAGE"] = pd.to_numeric(df["MATCH_PERCENTAGE"], errors='coerce')
 
             # Drop rows where MATCH_PERCENTAGE couldn't be converted
-            df = df.dropna()
+            df = df.dropna(subset=["MATCH_PERCENTAGE"])
 
             # Establish SQLite connection
             conn = sqlite3.connect(db_name)
@@ -76,11 +84,15 @@ class CSVToSQLiteTool(BaseTool):
             # Drop table if it exists
             cursor.execute("DROP TABLE IF EXISTS SHORTLISTED_CANDIDATES")
 
-            # Create the table
+            # Create the table with all seven columns
             create_table_query = """
             CREATE TABLE SHORTLISTED_CANDIDATES (
                 NAME TEXT,
                 MATCH_PERCENTAGE NUMERIC,
+                PHONE_NUMBER TEXT,
+                EMAIL_ADDRESS TEXT,
+                SKILLS TEXT,
+                EXPERIENCE TEXT,
                 RESUME_CONTENT TEXT
             );
             """

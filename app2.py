@@ -4,6 +4,7 @@ from crewai import Crew
 from agents import  resume_matcher, csv_writer_match, match_score_reader, resume_fetcher, shortlisted_writer, csv_to_sqlite_agent
 from tasks import  match_task, save_match_task, filter_task, fetch_resume_task, save_shortlisted_task, db_insertion_task
 from recruitment_automation import RecruitmentAutomation
+from gmail_automation_new import GmailAutomation
 import sqlite3
 from langchain_groq import ChatGroq
 from langchain.prompts import ChatPromptTemplate
@@ -15,6 +16,7 @@ st.set_page_config(page_title="Talent Acquisition AI", page_icon="🤖", layout=
 # Load environment variables
 load_dotenv()
 groq_api_key = os.getenv("GROQ_API_KEY")
+
 
 # Apply custom CSS
 st.markdown("""
@@ -70,7 +72,8 @@ st.markdown("""
         }
     </style>
 """, unsafe_allow_html=True)
-resumes_dir_pdf = "./RESUMES"
+#resumes_dir_pdf = "./RESUMES"
+resumes_dir_pdf = "./RESUMES_NEW"
 resume_files_pdf = [os.path.join(resumes_dir_pdf, f) for f in os.listdir(resumes_dir_pdf) if f.endswith(".pdf")]
 
 recruitment_system = RecruitmentAutomation()
@@ -106,6 +109,20 @@ if uploaded_file is not None:
     
     if st.button("🔍 Start Matching Process", use_container_width=True):
         with st.status("⏳ AI Matching in Progress...", expanded=True) as status:
+            files_to_delete = [
+    "applicant_resumes.csv",
+    "resume_match_scores.csv",
+    "shortlisted_candidates.csv",
+    "shortlisted_candidates.db"
+]
+
+
+            for file in files_to_delete:
+                if os.path.exists(file):
+                    os.remove(file)
+                    print(f"Deleted: {file}")
+                else:
+                    print(f"File not found, skipping: {file}")
             time.sleep(2)  # Simulate loading effect
             recruitment_system.kickoff(resume_files_pdf)
             time.sleep(5)
@@ -128,10 +145,7 @@ if uploaded_file is not None:
         CREATE TABLE SHORTLISTED_CANDIDATES (
             NAME TEXT,
             MATCH_PERCENTAGE NUMERIC,
-            PHONE_NUMBER TEXT,
             EMAIL_ADDRESS TEXT,
-            SKILLS TEXT,
-            EXPERIENCE TEXT,
             RESUME_CONTENT TEXT
         );
         """
@@ -200,3 +214,43 @@ if uploaded_file is not None:
 
         cursor.close()
         conn.close()
+        st.markdown("---")
+        st.markdown("### 📧 Send Interview Emails to Shortlisted Candidates")
+
+        interview_time = st.text_input("🕒 Enter Interview Time (e.g., Monday, April 7th at 11:00 AM IST)")
+
+        if interview_time:
+            if st.button("📨 Send Emails", type="primary", use_container_width=True):
+                load_dotenv()
+                google_form = os.getenv("GOOGLE_FORM_LINK", "")
+                organization_name = "Nexus AI"
+
+                def extract_details():
+                    names, emails = [], []
+                    try:
+                        conn = sqlite3.connect("shortlisted_candidates.db")
+                        cursor = conn.cursor()
+                        result = cursor.execute("SELECT NAME, EMAIL_ADDRESS FROM SHORTLISTED_CANDIDATES")
+                        for row in result:
+                            names.append(row[0])
+                            emails.append(row[1])
+                        conn.close()
+                    except sqlite3.Error as e:
+                        st.error(f"❌ SQLite error: {e}")
+                    return names, emails
+
+                names, emails = extract_details()
+
+                if not emails:
+                    st.error("⚠️ No candidates found to send emails to.")
+                else:
+                    gmail_automation = GmailAutomation()
+                    result = gmail_automation.kickoff(
+                        JD_text,
+                        organization_name,
+                        interview_time,
+                        emails,
+                        google_form
+                    )
+                    st.success("✅ Emails sent successfully!")
+        

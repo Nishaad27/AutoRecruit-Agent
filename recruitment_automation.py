@@ -1,10 +1,18 @@
-from crewai import Agent, Task, Crew
+from crewai import Agent, Task, Crew,LLM
 import time
 import os
 from custom_tools_pdf import PDFReadTool
 from custom_tools_csv_append import CSVAppendTool
 
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
+
+llm = LLM(
+    model='gemini/gemini-1.5-flash',
+    api_key=os.environ["GEMINI_API_KEY"]
+)
 
 class RecruitmentAutomation:
     def __init__(self):
@@ -13,7 +21,8 @@ class RecruitmentAutomation:
             backstory="Specializes in extracting text from resumes.",
             goal="Extract raw text from resume having the file path {file_path}, including the applicant's name.",
             tools=[PDFReadTool("{file_path}")],
-            verbose=True
+            verbose=True,
+            llm = llm
         )
 
         self.csv_writer = Agent(
@@ -21,7 +30,8 @@ class RecruitmentAutomation:
             backstory="Stores extracted resume content in CSV format.",
             goal="Save the applicant names and their full resume content into a CSV file.",
             tools=[CSVAppendTool()],
-            verbose=True
+            verbose=True,
+            llm=llm
         )
 
     def create_tasks(self, file_path):
