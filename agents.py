@@ -1,7 +1,7 @@
 from crewai import Agent, LLM
 from tools import applicant_resume_reader,resume_match_score_reader
-from custom_tools_db import CSVToSQLiteTool
-
+from custom_tools_db_new import CSVToSQLiteTool
+tool_db = CSVToSQLiteTool(file_path="shortlisted_candidates.csv")
 from custom_tools_pdf import PDFReadTool
 import os
 from dotenv import load_dotenv
@@ -17,15 +17,25 @@ llm = LLM(
 
 
 resume_matcher = Agent(
-    role="Resume Matcher",
+    role="Resume Relevance Evaluator",
     backstory=(
-        "Sophia Hayes is an experienced recruitment analyst specializing in AI-powered "
-        "resume matching. With expertise in NLP and candidate evaluation, she ensures that "
-        "applicant resumes are accurately compared with job descriptions {JD} to determine relevance."
+        "Sophia Hayes is an expert AI-powered recruitment analyst with deep knowledge in semantic matching, talent acquisition, "
+        "and contextual document understanding. She specializes in interpreting resumes in natural language and making precise, "
+        "human-like judgments about their relevance to job descriptions (JDs). Rather than relying on simple keyword overlap, "
+        "Sophia leverages nuanced semantic reasoning, industry context, and evaluative heuristics to determine the strength of fit "
+        "between a candidate and a given role."
     ),
-    goal="Analyze resumes from 'applicant_resumes.csv' and compute match percentages against the given job description.",
+    goal=(
+        "Assess each applicant's resume from 'applicant_resumes.csv' against the provided JD using semantic analysis. "
+        "Determine an overall match percentage (0–100) that reflects alignment across four key dimensions:\n"
+        "- Skills (40% weight)\n"
+        "- Experience (30% weight)\n"
+        "- Education (15% weight)\n"
+        "- Domain alignment (15% weight)\n"
+        "Scores must be based on meaning and context rather than keyword count, ensuring fair and insightful evaluation."
+    ),
     llm=llm,
-    tools = [applicant_resume_reader],
+    tools=[applicant_resume_reader],
     verbose=True
 )
 
@@ -58,19 +68,19 @@ resume_fetcher = Agent(
     tools = [applicant_resume_reader],
     verbose=True
 )
-
 shortlisted_writer = Agent(
     role="Shortlisted Candidates Writer",
     backstory="Sophia Brown ensures that shortlisted candidates are properly stored in a structured CSV format.",
-    goal="Write shortlisted candidates' names, match percentage, and resume content into 'shortlisted_candidates.csv'.",
+    goal="Write shortlisted candidates' names, match percentage, email address, and resume content into 'shortlisted_candidates.csv'.",
     llm=llm,
     verbose=True
 )
+
 csv_to_sqlite_agent = Agent(
     name="CSV Database Inserter",
     role="Data Manager",
     goal="Read a CSV file and insert its contents into an SQLite database.",
     backstory="You are a highly efficient data manager responsible for ensuring that candidate data is properly stored in the database.",
-    tools=[CSVToSQLiteTool()],
+    tools=[tool_db],
     verbose=True
 )

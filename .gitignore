@@ -3,3 +3,4 @@ newenv
 __pycache__/
 credentials.json
 token.json
+recruitment_automation.json
