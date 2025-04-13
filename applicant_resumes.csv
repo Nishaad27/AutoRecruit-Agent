@@ -52,7 +52,8 @@ Projects
 Medical Image Segmentation  – Developed UNet-based tool for organ segmentation.
 Bias Detection in Medical AI  – Created fairness audit framework for clinical 
 models."
-Unknown,"High -Level Data Flow in the Recruitment Automation System  
+Placeholder Applicant,"High -Level Data Flow in the Recruitment Automation System  
+
 Overall Process  
 The recruitment system processes data through four major stages, with information 
 becoming more refined at each step:  
@@ -93,31 +94,31 @@ Key Data Transformations
 This flow ensures that raw resume data is systematically processed, evaluated, filtered, and 
 leveraged to connect with the most qualified candidates, with each component adding value 
 to the information before passing it to the next stage."
-Mark Johnson,"Name: Mark Johnson  
-Email: mark.johnson@email.com  
-Phone: +1 555 -678-1234  
- 
-Objective:  
-Marketing Manager with 6 years of experience in digital marketing strategies, SEO, and brand 
-management.  
-Seeking to drive business growth through data -driven campaigns and audience engagement.  
- 
-Work Experience:  
-- Marketing Manager, ABC Corp (2019 -Present)  
-  - Led a team to implement SEO strategies, improving organic traffi c by 40%.  
-  - Managed social media campaigns with a 25% increase in customer engagement.  
-  - Developed email marketing funnels, increasing conversion rates.  
- 
-Education:  
-- MBA in Marketing, DEF Business School (2015 -2017)  
- 
-Skills:  
-- Digital Marketing, SEO , Google Analytics  
-- Content Strategy, Social Media Management  
-- Email Marketing, PPC Advertising  
- 
-Projects:  
-- Launched a successful influencer marketing campaign.  
+Mark Johnson,"Name: Mark Johnson
+Email: mark.johnson@email.com
+Phone: +1 555 -678-1234
+
+Objective:
+Marketing Manager with 6 years of experience in digital marketing strategies, SEO, and brand
+management.
+Seeking to drive business growth through data -driven campaigns and audience engagement.
+
+Work Experience:
+- Marketing Manager, ABC Corp (2019 -Present)
+  - Led a team to implement SEO strategies, improving organic traffi c by 40%.
+  - Managed social media campaigns with a 25% increase in customer engagement.
+  - Developed email marketing funnels, increasing conversion rates.
+
+Education:
+- MBA in Marketing, DEF Business School (2015 -2017)
+
+Skills:
+- Digital Marketing, SEO , Google Analytics
+- Content Strategy, Social Media Management
+- Email Marketing, PPC Advertising
+
+Projects:
+- Launched a successful influencer marketing campaign.
 - Designed and executed an e -commerce advertising strategy."
 Sarah Lee,"Name: Sarah Lee  
 Email: sarah.lee@email.com  
@@ -196,7 +197,12 @@ Projects
 articles.
 Predictive Maintenance  – Developed system for anomaly detection in 
 manufacturing lines.
-CI/CD for ML – Built pipelines using MLflow and GitHub Actions."
+CI/CD for ML – Built pipelines using MLflow and GitHub Actions.
+
+Awards
+Data Science Hackathon winner, 2020
+References
+Available upon request."
 Rounak Chakraborty,"Rounak Chakraborty
 Email: rounak242003@gmail.com
 Phone: +1 987-654-3210

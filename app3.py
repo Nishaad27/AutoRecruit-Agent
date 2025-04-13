@@ -297,25 +297,26 @@ if uploaded_file is not None:
 
         # Show the sheet crew button only after emails are sent
         if st.session_state.email_sent:
-            if st.button("🧠 Run Sheet Automation Crew"):
-                try:
-                    sheet_crew = SheetAutomation()
-                    sheet_crew.run()
-                    st.success("📊 Sheet automation crew executed successfully.")
-                    df = pd.read_csv("output_files/google_sheet_data.csv")  # Replace with your actual file path
+                if st.button("🧠 Run Sheet Automation Crew"):
+                    try:
+                        sheet_crew = SheetAutomation()
+                        sheet_crew.run()
+                        st.success("📊 Sheet automation crew executed successfully.")
 
-# Show the data
-                    st.write("### Interview Schedule", df)
+                        df = pd.read_csv("output_files/google_sheet_data.csv")  # Replace with your actual file path
+                        st.session_state["interview_df"] = df
+                        st.session_state["csv_data"] = df.to_csv(index=False).encode('utf-8')
 
-                    # Convert to CSV
-                    csv_data = df.to_csv(index=False).encode('utf-8')
+                    except Exception as e:
+                        st.error(f"❌ Sheet crew failed: {e}")
 
-                    # Download button
-                    st.download_button(
-                        label="📥 Download CSV",
-                        data=csv_data,
-                        file_name='interview_schedule.csv',
-                        mime='text/csv'
-                    )
-                except Exception as e:
-                    st.error(f"❌ Sheet crew failed: {e}")
+# Show interview schedule and download if available
+        if "interview_df" in st.session_state and "csv_data" in st.session_state:
+            st.write("### Interview Schedule", st.session_state["interview_df"])
+
+            st.download_button(
+                label="📥 Download CSV",
+                data=st.session_state["csv_data"],
+                file_name='interview_schedule.csv',
+                mime='text/csv'
+            )
