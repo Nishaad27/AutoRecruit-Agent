@@ -1,5 +1,5 @@
 .env
-venv_genai
+newenv
 __pycache__/
 credentials.json
 token.json
