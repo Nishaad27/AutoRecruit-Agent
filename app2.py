@@ -4,6 +4,7 @@ from crewai import Crew
 from agents import  resume_matcher, csv_writer_match, match_score_reader, resume_fetcher, shortlisted_writer, csv_to_sqlite_agent
 from tasks import  match_task, save_match_task, filter_task, fetch_resume_task, save_shortlisted_task, db_insertion_task
 from recruitment_automation import RecruitmentAutomation
+from interview_scheduler_crew import SheetAutomation
 from gmail_automation_new import GmailAutomation
 import sqlite3
 from langchain_groq import ChatGroq
@@ -112,8 +113,8 @@ if uploaded_file is not None:
             files_to_delete = [
     "applicant_resumes.csv",
     "resume_match_scores.csv",
-    "shortlisted_candidates.csv",
-    "shortlisted_candidates.db"
+    "shortlisted_candidates.csv"
+   # "shortlisted_candidates.db"
 ]
 
 
@@ -139,55 +140,83 @@ if uploaded_file is not None:
 
         llm = ChatGroq(groq_api_key=groq_api_key, model="Llama3-8b-8192")
         conn = sqlite3.connect("shortlisted_candidates.db")
-        cursor = conn.cursor()
 
+        cursor = conn.cursor()
+         
         schema = """
-        CREATE TABLE SHORTLISTED_CANDIDATES (
-            NAME TEXT,
-            MATCH_PERCENTAGE NUMERIC,
-            EMAIL_ADDRESS TEXT,
-            RESUME_CONTENT TEXT
-        );
-        """
+    CREATE TABLE SHORTLISTED_CANDIDATES (
+        NAME TEXT,
+        MATCH_PERCENTAGE NUMERIC,
+        EMAIL_ADDRESS TEXT,
+        RESUME_CONTENT TEXT
+    );
+"""
+
+        interview_schema = """
+    CREATE TABLE INTERVIEW_SCHEDULED (
+    CANDIDATE_NAME TEXT,
+    INTERVIEW_DATE TEXT,
+    INTERVIEW_TIME TEXT,
+    EMAIL_ADDRESS TEXT,
+    PHONE_NUMBER TEXT,
+    LINKEDIN_ID TEXT,
+    SALARY_EXPECTANCY TEXT
+);
+"""
 
 
         prompt = ChatPromptTemplate.from_template(
-            """ 
-            Based on the schema of the database provided
-            Schema :
-            {schema}
-            
-            And based on the user query
-            User Query:
-            {query}
-            
-            Give me an SQL query which can be executed on sqlite3 database.
-            Do not write anything else other than the SQL query.
-            If the user asks about work experience, contacts, projects, or education, just return the resume_content.
-            """
-        )
+    """ 
+    Based on the schemas of the databases provided:
+    
+    Shortlisted Candidates Schema:
+    {schema}
+    
+    Interview Scheduled Schema:
+    {interview_schema}
+    
+    And based on the user query:
+    User Query:
+    {query}
+    
+    Generate an SQL query that can be executed on a sqlite3 database.
+    
+     If the query asks about shortlisted candidates, use the Shortlisted Candidates table.
+     If the query asks about interviews, scheduled interviews, or how many candidates have interviews scheduled, use the Interview Scheduled table.
+     If the query mentions work experience, contacts, projects, or education, only return the `resume_content` column from the Shortlisted Candidates table.
+    
+     Do NOT return anything except the SQL query and DO NOT give  ''' or markdown formatting.
+        Just give the SQL query, nothing else.
+    """
+)
 
         output_parser = StrOutputParser()
         chain = prompt | llm | output_parser
 
         output_prompt = ChatPromptTemplate.from_template(
-            """ 
-            Based on the schema of the database provided
-            Schema :
-            {schema}
-            
-            And based on the user query
-            User Query:
-            {query}
-            
-            And based on the answer fetched from the SQL query
-            Answer:
-            {ans}
-            
-            Give me the output in a properly formatted and organized manner.
-            Just give the output, nothing else.
-            """
-        )
+    """ 
+    Based on the schemas of the databases provided:
+    Shortlisted Candidates Schema:
+    {schema}
+    
+    Interview Scheduled Schema:
+    {interview_schema}
+    
+    Based on the user query:
+    User Query:
+    {query}
+    
+    Based on the answer fetched from the SQL query (which may contain resume content or interview details):
+    Answer:
+    {ans}
+    
+    If the query is related to skills, work experience, or projects, extract only the relevant information from the Answer (as it contains the full resume content) and ignore the database schema.
+    If the query is related to scheduled interviews, extract only the relevant interview details.
+
+    Provide the final output in a properly formatted and organized manner.
+    Just give the output, nothing else.
+    """
+)
 
         output_chain = output_prompt | llm | output_parser
 
@@ -203,10 +232,10 @@ if uploaded_file is not None:
             st.session_state.messages.append({"role": "user", "content": user_query})
             st.chat_message("user").write(user_query)
 
-            sql_query = chain.invoke({"schema": schema, "query": user_query})
+            sql_query = chain.invoke({"schema": schema,"interview_schema":interview_schema, "query": user_query})
             data = cursor.execute(sql_query).fetchall()
 
-            response = output_chain.invoke({"query": user_query, "schema": schema, "ans": str(data)})
+            response = output_chain.invoke({"query": user_query, "schema": schema,"interview_schema":interview_schema, "ans": str(data)})
 
             with st.chat_message("assistant"):
                 st.markdown(f'<div class="chat-box">{response}</div>', unsafe_allow_html=True)
@@ -219,38 +248,58 @@ if uploaded_file is not None:
 
         interview_time = st.text_input("🕒 Enter Interview Time (e.g., Monday, April 7th at 11:00 AM IST)")
 
+        if 'email_sent' not in st.session_state:
+              st.session_state.email_sent = False
+
+        #interview_time = st.text_input("Enter interview time")
+        #JD_text = st.text_area("Paste Job Description Here")
+
         if interview_time:
-            if st.button("📨 Send Emails", type="primary", use_container_width=True):
-                load_dotenv()
-                google_form = os.getenv("GOOGLE_FORM_LINK", "")
-                organization_name = "Nexus AI"
+           # if not st.session_state.email_sent:
+                if st.button("📨 Send Emails", type="primary", use_container_width=True):
+                    load_dotenv()
+                    google_form = os.getenv("GOOGLE_FORM_LINK", "")
+                    organization_name = "Nexus AI"
 
-                def extract_details():
-                    names, emails = [], []
-                    try:
-                        conn = sqlite3.connect("shortlisted_candidates.db")
-                        cursor = conn.cursor()
-                        result = cursor.execute("SELECT NAME, EMAIL_ADDRESS FROM SHORTLISTED_CANDIDATES")
-                        for row in result:
-                            names.append(row[0])
-                            emails.append(row[1])
-                        conn.close()
-                    except sqlite3.Error as e:
-                        st.error(f"❌ SQLite error: {e}")
-                    return names, emails
+                    def extract_details():
+                        names, emails = [], []
+                        try:
+                            conn = sqlite3.connect("shortlisted_candidates.db")
+                            cursor = conn.cursor()
+                            result = cursor.execute("SELECT NAME, EMAIL_ADDRESS FROM SHORTLISTED_CANDIDATES")
+                            for row in result:
+                                names.append(row[0])
+                                emails.append(row[1])
+                            conn.close()
+                        except sqlite3.Error as e:
+                            st.error(f"❌ SQLite error: {e}")
+                        return names, emails
 
-                names, emails = extract_details()
+                    names, emails = extract_details()
 
-                if not emails:
-                    st.error("⚠️ No candidates found to send emails to.")
-                else:
-                    gmail_automation = GmailAutomation()
-                    result = gmail_automation.kickoff(
-                        JD_text,
-                        organization_name,
-                        interview_time,
-                        emails,
-                        google_form
-                    )
-                    st.success("✅ Emails sent successfully!")
-        
+                    if not emails:
+                        st.error("⚠️ No candidates found to send emails to.")
+                    else:
+                        try:
+                            gmail_automation = GmailAutomation()
+                            result = gmail_automation.kickoff(
+                                JD_text,
+                                organization_name,
+                                interview_time,
+                                emails,
+                                google_form
+                            )
+                            st.success("✅ Emails sent successfully!")
+                            st.session_state.email_sent = True
+                        except Exception as e:
+                            st.error(f"❌ Failed to send emails: {e}")
+
+        # Show the sheet crew button only after emails are sent
+        if st.session_state.email_sent:
+            if st.button("🧠 Run Sheet Automation Crew"):
+                try:
+                    sheet_crew = SheetAutomation()
+                    sheet_crew.run()
+                    st.success("📊 Sheet automation crew executed successfully.")
+                except Exception as e:
+                    st.error(f"❌ Sheet crew failed: {e}")

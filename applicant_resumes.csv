@@ -52,8 +52,7 @@ Projects
 Medical Image Segmentation  – Developed UNet-based tool for organ segmentation.
 Bias Detection in Medical AI  – Created fairness audit framework for clinical 
 models."
-,"High -Level Data Flow in the Recruitment Automation System  
- 
+Unknown,"High -Level Data Flow in the Recruitment Automation System  
 Overall Process  
 The recruitment system processes data through four major stages, with information 
 becoming more refined at each step:  
@@ -225,10 +224,4 @@ Projects
 Deep Learning OCR Engine  – Converted scanned docs to searchable text with 
 >95% accuracy.
 Cloud-native ML Deployment  – Created RESTful API with Flask and deployed via 
-Kubernetes.
-
-Awards and Recognition
-Dean’s List, University of Edinburgh (2017, 2018)
-Extracurricular activities
-ACM International Collegiate Programming Contest
-Volunteer Tutor at Edinburgh College"
+Kubernetes."
